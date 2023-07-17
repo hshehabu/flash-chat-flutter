@@ -9,13 +9,47 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  Animation animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    animation = CurvedAnimation(parent: animationController, curve: Curves.decelerate);
+    animationController.forward();
+    animationController.addStatusListener((status){
+      if(status == AnimationStatus.completed){
+        animationController.reverse(from: 1.0);
+      }
+      else if(status == AnimationStatus.dismissed){
+        animationController.forward();
+      }
+    });
+    animationController.addListener(
+      () {
+        setState(() {});
+        print(animation.value);
+      },
+    );
+  }
+@override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -26,11 +60,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: 60.0,
+                    height: animation.value * 100,
                   ),
                 ),
                 Text(
-                  'Flash Chat',
+                  '${animation.value.toInt() * 100}%',
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
@@ -38,11 +72,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 48.0,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
                 elevation: 5.0,
                 color: Colors.lightBlueAccent,
@@ -53,7 +87,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: Text(
+                  child: const Text(
                     'Log In',
                   ),
                 ),
@@ -71,7 +105,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: Text(
+                  child: const Text(
                     'Register',
                   ),
                 ),
