@@ -17,11 +17,7 @@ class FlashChat extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         ChatScreen.id: (context) => ChatScreen()
       },
-      theme: ThemeData.dark().copyWith(
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Colors.black54),
-        ),
-      ),
+
       home: WelcomeScreen(),
     );
   }
