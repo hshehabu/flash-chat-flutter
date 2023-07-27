@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,10 +21,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
   void getCurrentUser() async {
     try {
-      final user = await _auth.currentUser!;
+      final user = _auth.currentUser!;
       if (user != null) {
         loggedUser = user;
-        print(loggedUser.email);
       }
     } catch (e) {
       print(e);

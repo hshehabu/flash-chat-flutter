@@ -1,4 +1,8 @@
+import 'dart:js_interop';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import '../components/rounded_button.dart';
 
@@ -10,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  late String email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,15 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
-              keyboardType: TextInputType.emailAddress,
-              textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: kInputDecoration.copyWith(
-                hintText: 'Enter your email',
-              )
-            ),
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  email = value;
+                },
+                decoration: kInputDecoration.copyWith(
+                  hintText: 'Enter your email',
+                )),
             SizedBox(
               height: 8.0,
             ),
@@ -47,17 +53,26 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
-              decoration: kInputDecoration.copyWith(
-                hintText: 'Enter your password'
-              ),
+              decoration:
+                  kInputDecoration.copyWith(hintText: 'Enter your password'),
             ),
             SizedBox(
               height: 24.0,
             ),
             RoundedButton(
-              onPressed: () {},
+              onPressed: () async{
+                try {
+                  final loggedUser = await _auth.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  if (loggedUser != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
               color: Colors.lightBlueAccent,
               title: 'login',
             ),

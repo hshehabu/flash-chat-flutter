@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import '../components/rounded_button.dart';
 import '../constants.dart';
